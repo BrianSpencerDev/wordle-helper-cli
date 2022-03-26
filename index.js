@@ -12,16 +12,18 @@ const input = prompt('Enter up to 5 letters:  ');
 
 //convert input string to array of letters
 const letters = input.split('');
-//let letters = ['i', 'H', '?', 'e', 'R'];
 
+
+//first take the list of words and search for the letters that we user cares about position
 wordsWith = findWordsWithCharPos(letters, words);
 
-//console.log(wordsWith);
-
-//console.log(letters);
-
+//second take the new list of words and search for the letters where position does not matter
 wordsWith = findWordsContaining(letters, wordsWith);
 
+//sort array alphabetically
+wordsWith.sort();
+
+//return array of words
 console.log(wordsWith);
 
 
