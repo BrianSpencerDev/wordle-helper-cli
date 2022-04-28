@@ -14,7 +14,7 @@ const input = prompt('Enter up to 5 letters:  ');
 const letters = input.split('');
 
 
-//first take the list of words and search for the letters that we user cares about position
+//first take the list of words and search for the letters where position matters
 wordsWith = findWordsWithCharPos(letters, words);
 
 //second take the new list of words and search for the letters where position does not matter
@@ -73,7 +73,7 @@ function findWordsWithCharPos(arr1, arr2){
   //take out question marks out of letters
   arr1 = arr1.filter(letter => letter !== '?' );
   
-
+  //number of total positions letter to be searched
   const positions = Object.keys(letterPos).length;
 
   //fill numOfLettersIn with number of desired letters in word
