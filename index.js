@@ -13,7 +13,6 @@ const input = prompt('Enter up to 5 letters:  ');
 //convert input string to array of letters
 const letters = input.split('');
 
-
 //first take the list of words and search for the letters where position matters
 wordsWith = findWordsWithCharPos(letters, words);
 
@@ -29,25 +28,56 @@ console.log(wordsWith);
 
 
 function findWordsContaining(arr1, arr2){
-  let pattern = '';
   const wordsWith = [];
+  const frequency = {};
+  const wordsFrequency = [];
 
-  arr1 = filterOutPos(arr1);
+  //filter out ?s
+  arr1 = arr1.filter(letter => letter !== '?' );
 
-  //create regex
-  for (const letter of arr1){
-    pattern += '(?=\\w*' + letter + ')';
+  //find frequency of each char in letters array
+  for (const letter of arr1) {
+    frequency[letter.toLowerCase()] ? frequency[letter.toLowerCase()] += 1 :     
+    frequency[letter.toLowerCase()] = 1;
   }
-  pattern += '\\w+';
-  const regex = new RegExp(pattern);
 
-  //iterate through words to see if letters are in a word
-  for (const word of arr2){
-    //if letters are in word add word to wordsWith arr
-    if(regex.test(word)){
-      wordsWith.push(word)
+  //populate wordsFrequency array
+  for(const word of arr2) {
+    const freq = {};
+
+    //find frequency of chars in string
+    for(const char of word) {
+      freq[char] ? freq[char] += 1 : freq[char] = 1;
     }
-  };
+    
+    wordsFrequency.push(freq)
+  }
+
+  //compare frequencies
+  for (let i = 0; i < wordsFrequency.length; i++) {
+    let doAdd = true;
+    const wordFreq = wordsFrequency[i];
+    
+    for (const char in frequency) {
+      //check if the letter is in the word
+      if(!(char in wordFreq)) {
+        doAdd = false;
+        break;
+      }
+      //make sure char frequency in word is >= char freq in letters 
+      if(frequency[char] > wordFreq[char]) {
+        doAdd = false;
+        break;
+      }
+    }
+    
+    //if word contains desired letters add to wordsWith array
+    if(doAdd) {
+      wordsWith.push(arr2[i])
+    }   
+  }  
+  
+
   
   return wordsWith;
 }
@@ -66,12 +96,6 @@ function findWordsWithCharPos(arr1, arr2){
       letterPos[arr1[i].toLowerCase()] = i;
     }
   }
-
-  //take out positonal letters out of arr1
-  arr1 = arr1.filter(letter => letter !== letter.toUpperCase() );
-
-  //take out question marks out of letters
-  arr1 = arr1.filter(letter => letter !== '?' );
   
   //number of total positions letter to be searched
   const positions = Object.keys(letterPos).length;
@@ -95,14 +119,4 @@ function findWordsWithCharPos(arr1, arr2){
   }
 
   return wordsWith;
-}
-
-function filterOutPos(arr){
-  //take out positonal letters out of arr1
-  arr = arr.filter(letter => letter !== letter.toUpperCase() );
-
-  //take out question marks out of letters
-  arr = arr.filter(letter => letter !== '?' );
-
-  return arr
 }
